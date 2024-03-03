@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  ecommerce.order.server:
+    image: ${DOCKER_REGISTRY-}ecommerce.order.server
+    build:
+      context: .
+      dockerfile: Ecommerce.Order.API/Dockerfile
