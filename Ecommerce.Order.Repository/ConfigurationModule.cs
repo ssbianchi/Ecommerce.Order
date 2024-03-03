@@ -1,4 +1,5 @@
 ﻿using Ecommerce.Order.Domain.Entity.Order.Repository;
+using Ecommerce.Order.Domain.Entity.OrderSession.Repository;
 using Ecommerce.Order.Domain.Entity.Readonly.Repository;
 using Ecommerce.Order.Repository.Context;
 using Ecommerce.Order.Repository.Repository;
@@ -26,7 +27,7 @@ namespace Ecommerce.Order.Repository
 
             services.AddScoped<IReadonlyRepository, ReadonlyRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
-            //services.AddScoped<IOrderSessionRepository, OrderSessionRepository>();
+            services.AddScoped<IOrderSessionRepository, OrderSessionRepository>();
 
         }
 

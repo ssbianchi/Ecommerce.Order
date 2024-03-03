@@ -47,7 +47,7 @@ namespace Ecommerce.Order.API.Filter
                 context.Result = new ObjectResult(response) { StatusCode = response.Status };
                 context.HttpContext.Response.ContentType = ERROR_CONTENT_TYPE;
                 context.ExceptionHandled = true;
-                _logger.LogError(JsonSerializer.Serialize(response));
+                _logger.LogInformation(JsonSerializer.Serialize(response));
             }
             else if (context.Result is BadRequestObjectResult)
             {
@@ -83,7 +83,7 @@ namespace Ecommerce.Order.API.Filter
 
                 context.Result = new ObjectResult(response) { StatusCode = response.Status };
                 context.HttpContext.Response.ContentType = ERROR_CONTENT_TYPE;
-                _logger.LogError(JsonSerializer.Serialize(response));
+                _logger.LogInformation(JsonSerializer.Serialize(response));
             }
         }
 

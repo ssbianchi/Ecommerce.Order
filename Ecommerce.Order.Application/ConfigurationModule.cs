@@ -1,4 +1,5 @@
 ﻿using Ecommerce.Order.Application.Order;
+using Ecommerce.Order.Application.OrderSession;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Ecommerce.Order.Application
@@ -10,6 +11,7 @@ namespace Ecommerce.Order.Application
             service.AddAutoMapper(typeof(ConfigurationModule).Assembly);
 
             service.AddScoped<IOrderService, OrderService>();
+            service.AddScoped<IOrderSessionService, OrderSessionService>();
         }
     }
 }

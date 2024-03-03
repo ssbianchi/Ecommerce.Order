@@ -1,7 +1,11 @@
 ﻿using AutoMapper;
 using Ecommerce.Order.Application.Order.Dto;
+using Ecommerce.Order.Application.OrderSession;
+using Ecommerce.Order.Application.OrderSession.Dto;
 using Ecommerce.Order.Application.Shared;
+using Ecommerce.Order.CrossCutting.Enumeration;
 using Ecommerce.Order.Domain.Entity.Order.Repository;
+using Ecommerce.Order.Domain.Entity.OrderSession.Repository;
 using Ecommerce.Order.Domain.Entity.Readonly.Repository;
 
 namespace Ecommerce.Order.Application.Order
@@ -11,17 +15,19 @@ namespace Ecommerce.Order.Application.Order
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IReadonlyRepository _readonlyRepository;
+        private readonly IOrderSessionRepository _orderSessionRepository;
 
-        public OrderService(IOrderRepository OrderRepository, IMapper mapper, IReadonlyRepository readonlyRepository)
+        public OrderService(IOrderRepository orderRepository, IOrderSessionRepository orderSessionRepository, IMapper mapper, IReadonlyRepository readonlyRepository)
             : base(mapper)
         {
-            _orderRepository = OrderRepository;
+            _orderRepository = orderRepository;
+            _orderSessionRepository = orderSessionRepository;
             //_mapper = mapper;
             _readonlyRepository = readonlyRepository;
         }
-        public async Task<OrderDto> GetOrder(int OrderId)
+        public async Task<OrderDto> GetOrder(int orderId)
         {
-            var result = await _orderRepository.GetOneByCriteria(a => a.Id == OrderId);
+            var result = await _orderRepository.GetOneByCriteria(a => a.Id == orderId);
             return _mapper.Map<OrderDto>(result);
         }
         public async Task<List<OrderDto>> GetAllOrders()
@@ -48,16 +54,32 @@ namespace Ecommerce.Order.Application.Order
         //    }
         //    return _mapper.Map<OrderDto>(entity);
         //}
-        public async Task<OrderDto> SaveOrder(OrderDto OrderDto)
+        public async Task<OrderDto> SaveOrder(int userId, OrderDto orderDto)
         {
             using (var transaction = await _orderRepository.CreateTransaction())
             {
                 try
                 {
-                    //if (!OrderDto.Created.HasValue)
-                    //    Created.Created = DateTime.Now;
+                    if (orderDto.Qtd <= 0)
+                        throw new System.Exception("Favor inserir uma quantidade válida");
 
-                    var result = await SaveUpdateDeleteDto(OrderDto, _orderRepository);
+                    var hasSession = _mapper.Map<OrderSessionDto>(await _orderSessionRepository.GetOneByCriteria(a => a.UserId == userId));
+
+                    if (hasSession == null)
+                    {
+                        var session = new OrderSessionDto() { UserId = userId, CreatedAt = DateTime.Now, OperationId = (int)OperationEnum.None };
+                        hasSession = await SaveUpdateDeleteDto(session, _orderSessionRepository);
+                    }
+                    orderDto.SessionId = hasSession.Id;
+
+                    //var hasOrder = await _orderRepository.GetOneByCriteria(a => a.ProductId == orderDto.ProductId && a.SessionId == orderDto.SessionId);
+                    //if (hasOrder != null)
+                    //{
+                    //    orderDto.Id = hasOrder.Id;
+                    //    orderDto.OperationId = (int)OperationEnum.HasChanges;
+                    //}
+                    
+                    var result = await SaveUpdateDeleteDto(orderDto, _orderRepository);
 
                     await transaction.CommitAsync();
 
