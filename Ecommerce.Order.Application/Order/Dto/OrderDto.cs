@@ -9,6 +9,7 @@ namespace Ecommerce.Order.Application.Order.Dto
         public int SessionId { get; set; }
         public int ProductId { get; set; }
         public int Qtd { get; set; }
+        public double Price { get; set; }
         //public OrderSessionDto Session { get; set; }
     }
 }

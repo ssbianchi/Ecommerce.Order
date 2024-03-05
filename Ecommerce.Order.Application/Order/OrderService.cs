@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Ecommerce.Order.Application.Order.Dto;
-using Ecommerce.Order.Application.OrderSession;
 using Ecommerce.Order.Application.OrderSession.Dto;
+using Ecommerce.Order.Application.RabbitMq;
 using Ecommerce.Order.Application.Shared;
 using Ecommerce.Order.CrossCutting.Enumeration;
 using Ecommerce.Order.Domain.Entity.Order.Repository;
@@ -78,7 +78,7 @@ namespace Ecommerce.Order.Application.Order
                     //    orderDto.Id = hasOrder.Id;
                     //    orderDto.OperationId = (int)OperationEnum.HasChanges;
                     //}
-                    
+
                     var result = await SaveUpdateDeleteDto(orderDto, _orderRepository);
 
                     await transaction.CommitAsync();
@@ -90,6 +90,36 @@ namespace Ecommerce.Order.Application.Order
                     transaction.Rollback();
                     throw ex;
                 }
+            }
+        }
+        public async Task<bool> CloseOrder(int userId)
+        {
+            try
+            {
+                var hasSession = await _orderSessionRepository.GetOneByCriteria(a => a.UserId == userId);
+
+
+                var hasOrder = await _orderRepository.GetAllByCriteria(a => a.SessionId == hasSession.Id);
+
+                if (hasSession == null || hasOrder == null)
+                    throw new System.Exception("Usuário não tem ordem, favor verificar!");
+
+                var amount = 0d;
+                foreach (var item in hasOrder.ToList())
+                    amount += item.Price * item.Qtd;
+                
+                var rabbit = new RabbitMessageService();
+                rabbit.SendMessage(new OrderCloseDto()
+                {
+                    OrderSessionId = hasSession.Id,
+                    Amount = amount
+                });
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
         public async Task<bool> DeleteOrder(int OrderdId)

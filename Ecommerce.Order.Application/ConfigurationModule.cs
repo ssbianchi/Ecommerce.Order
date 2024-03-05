@@ -1,5 +1,6 @@
 ﻿using Ecommerce.Order.Application.Order;
 using Ecommerce.Order.Application.OrderSession;
+using Ecommerce.Order.Application.RabbitMq;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Ecommerce.Order.Application
@@ -12,6 +13,7 @@ namespace Ecommerce.Order.Application
 
             service.AddScoped<IOrderService, OrderService>();
             service.AddScoped<IOrderSessionService, OrderSessionService>();
+            service.AddScoped<IRabbitMessageService, RabbitMessageService>();
         }
     }
 }

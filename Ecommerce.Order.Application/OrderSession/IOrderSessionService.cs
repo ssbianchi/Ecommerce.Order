@@ -1,10 +1,4 @@
-﻿using Ecommerce.Order.Application.Order.Dto;
-using Ecommerce.Order.Application.OrderSession.Dto;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Ecommerce.Order.Application.OrderSession.Dto;
 
 namespace Ecommerce.Order.Application.OrderSession
 {

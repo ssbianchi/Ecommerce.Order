@@ -1,16 +1,7 @@
 ﻿using AutoMapper;
-using Ecommerce.Order.Application.Order.Dto;
-using Ecommerce.Order.Application.Order;
 using Ecommerce.Order.Application.OrderSession.Dto;
 using Ecommerce.Order.Application.Shared;
-using Ecommerce.Order.Domain.Entity.Order.Repository;
 using Ecommerce.Order.Domain.Entity.OrderSession.Repository;
-using Ecommerce.Order.Domain.Entity.Readonly.Repository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ecommerce.Order.Application.OrderSession
 {

@@ -18,10 +18,10 @@ namespace Ecommerce.Order.Repository.Repository
         {
             var sql = @"
 Select Id
-     , Nome
-     , Login
-     , Password
-     , Email
+     , SessionId
+     , ProductId
+     , Qtd
+     , Price
   From Orders";
 
             //var result = await QueryAsync<DapperOrder>(sql, new { Id = OrderId });

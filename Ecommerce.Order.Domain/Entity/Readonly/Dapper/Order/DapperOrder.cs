@@ -6,5 +6,6 @@
         public int SessionId { get; set; }
         public int ProductId { get; set; }
         public int Qtd { get; set; }
+        public double Price { get; set; }
     }
 }
