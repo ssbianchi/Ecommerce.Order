@@ -11,6 +11,7 @@ namespace Ecommerce.Order.Repository.Mapping.OrderSession
             builder.HasKey(e => e.Id);
             builder.Property(x => x.Id).IsRequired().HasColumnName("Id");
             builder.Property(x => x.UserId).IsRequired().HasColumnName("UserId");
+            builder.Property(x => x.OrderSessionStatusId).IsRequired().HasColumnName("OrderSessionStatusId");
             builder.Property(x => x.CreatedAt).IsRequired().HasColumnName("CreatedAt");
         }
     }

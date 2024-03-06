@@ -5,15 +5,17 @@ VisualStudioVersion = 17.9.34616.47
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ecommerce.Order.API", "Ecommerce.Order.API\Ecommerce.Order.API.csproj", "{80DC2131-37C0-4DC4-B772-E87267578A2B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecommerce.Order.Application", "Ecommerce.Order.Application\Ecommerce.Order.Application.csproj", "{0163E542-0824-4722-BC51-839A6F367CC3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ecommerce.Order.Application", "Ecommerce.Order.Application\Ecommerce.Order.Application.csproj", "{0163E542-0824-4722-BC51-839A6F367CC3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecommerce.Order.CrossCutting", "Ecommerce.Order.CrossCutting\Ecommerce.Order.CrossCutting.csproj", "{007A28F6-EE96-4F1F-AC29-F01C5E2F9B69}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ecommerce.Order.CrossCutting", "Ecommerce.Order.CrossCutting\Ecommerce.Order.CrossCutting.csproj", "{007A28F6-EE96-4F1F-AC29-F01C5E2F9B69}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecommerce.Order.Domain", "Ecommerce.Order.Domain\Ecommerce.Order.Domain.csproj", "{1031779C-DA33-4242-960D-917AE50F30EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ecommerce.Order.Domain", "Ecommerce.Order.Domain\Ecommerce.Order.Domain.csproj", "{1031779C-DA33-4242-960D-917AE50F30EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecommerce.Order.Repository", "Ecommerce.Order.Repository\Ecommerce.Order.Repository.csproj", "{69CAB4F3-FB73-4150-A0FE-39DFA325B61C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ecommerce.Order.Repository", "Ecommerce.Order.Repository\Ecommerce.Order.Repository.csproj", "{69CAB4F3-FB73-4150-A0FE-39DFA325B61C}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{FDE9C8E7-1A05-42A1-B591-BF6EABCD194D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eccomerce.Order.Rabbit.Consumer", "Eccomerce.Order.Rabbit.Consumer\Eccomerce.Order.Rabbit.Consumer.csproj", "{CE4883D6-E03B-4940-A0DE-BE616BAFC4FB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{FDE9C8E7-1A05-42A1-B591-BF6EABCD194D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FDE9C8E7-1A05-42A1-B591-BF6EABCD194D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FDE9C8E7-1A05-42A1-B591-BF6EABCD194D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE4883D6-E03B-4940-A0DE-BE616BAFC4FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE4883D6-E03B-4940-A0DE-BE616BAFC4FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE4883D6-E03B-4940-A0DE-BE616BAFC4FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE4883D6-E03B-4940-A0DE-BE616BAFC4FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

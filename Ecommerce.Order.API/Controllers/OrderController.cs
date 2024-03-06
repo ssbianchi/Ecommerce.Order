@@ -1,7 +1,8 @@
 ﻿using Ecommerce.Order.Application.Order;
 using Ecommerce.Order.Application.Order.Dto;
 using Ecommerce.Order.Application.OrderSession;
-using Ecommerce.Order.Application.RabbitMq;
+using Ecommerce.Order.Application.RabbitRequest;
+using Ecommerce.Order.Application.RabbitRequest;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ecommerce.Order.API.Controllers
@@ -12,13 +13,13 @@ namespace Ecommerce.Order.API.Controllers
     {
         private readonly ILogger _logger;
         private readonly IOrderService _orderService;
-        private readonly IRabbitMessageService _rabbitMessageService;
+        private readonly IRabbitRequestService _rabbitRequestService;
 
-        public OrderController(ILogger<OrderController> logger, IOrderService orderService, IRabbitMessageService rabbitMessageService)
+        public OrderController(ILogger<OrderController> logger, IOrderService orderService, IRabbitRequestService rabbitRequestService)
         {
             _logger = logger;
             _orderService = orderService;
-            _rabbitMessageService = rabbitMessageService;
+            _rabbitRequestService = rabbitRequestService;
         }
         #region Web API Methods
         [HttpGet("GetOrderById")]
@@ -50,7 +51,7 @@ namespace Ecommerce.Order.API.Controllers
             if (result == null)
                 return NotFound();
 
-            //3_rabbitMessageService.SendMessage(result);
+            //_rabbitMessageService.SendMessage(result);
             return Created($"/{result.Id}", result);
         }
 
@@ -62,11 +63,22 @@ namespace Ecommerce.Order.API.Controllers
             if (result == null)
                 return NotFound();
 
-            _rabbitMessageService.SendMessage(result);
+            //_rabbitRequestService.SendMessage(result);
 
             return Created($"/", result);
         }
+        [HttpPost("CloseOrderSession")]
+        public async Task<IActionResult> CloseOrderSession(int orderSessionId, int orderSessionStatusId)
+        {
+            var result = await _orderService.CloseOrderSession(orderSessionId, orderSessionStatusId);
 
+            if (result == null)
+                return NotFound();
+
+            //_rabbitRequestService.SendMessage(result);
+
+            return Created($"/", result);
+        }
         [HttpDelete("DeleteOrder")]
         public async Task<IActionResult> DelteOrder(int OrderId)
         {

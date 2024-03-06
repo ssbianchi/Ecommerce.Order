@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Ecommerce.Order.Application.Order.Dto;
 using Ecommerce.Order.Application.OrderSession.Dto;
-using Ecommerce.Order.Application.RabbitMq;
+using Ecommerce.Order.Application.RabbitRequest;
 using Ecommerce.Order.Application.Shared;
 using Ecommerce.Order.CrossCutting.Enumeration;
 using Ecommerce.Order.Domain.Entity.Order.Repository;
@@ -67,7 +67,7 @@ namespace Ecommerce.Order.Application.Order
 
                     if (hasSession == null)
                     {
-                        var session = new OrderSessionDto() { UserId = userId, CreatedAt = DateTime.Now, OperationId = (int)OperationEnum.None };
+                        var session = new OrderSessionDto() { UserId = userId, CreatedAt = DateTime.Now, OrderSessionStatusId = (int)OrderSessionStatusEnum.NotSet, OperationId = (int)OperationEnum.None };
                         hasSession = await SaveUpdateDeleteDto(session, _orderSessionRepository);
                     }
                     orderDto.SessionId = hasSession.Id;
@@ -107,19 +107,58 @@ namespace Ecommerce.Order.Application.Order
                 var amount = 0d;
                 foreach (var item in hasOrder.ToList())
                     amount += item.Price * item.Qtd;
-                
-                var rabbit = new RabbitMessageService();
+
+                var rabbit = new RabbitRequestService();
                 rabbit.SendMessage(new OrderCloseDto()
                 {
                     OrderSessionId = hasSession.Id,
                     Amount = amount
-                });
+                }, "orderQueue");
 
                 return true;
             }
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+        public async Task<bool> CloseOrderSession(int orderSessionId, int orderSessionStatusId)
+        {
+            using (var transaction = await _orderSessionRepository.CreateTransaction())
+            {
+                try
+                {
+                    if (orderSessionStatusId != (int)OrderSessionStatusEnum.Complete)
+                        throw new System.Exception("Pagamento não foi concluido com sucesso. Favor verificar!");
+
+                    var orderSession = _mapper.Map<OrderSessionDto>(await _orderSessionRepository.GetOneByCriteria(a => a.Id == orderSessionId));
+                    orderSession.OrderSessionStatusId = orderSessionStatusId;
+
+                    var hasOrders = await _orderRepository.GetAllByCriteria(a => a.SessionId == orderSessionId);
+
+                    if (orderSession == null || hasOrders == null)
+                        throw new System.Exception("Usuário não tem ordem, favor verificar!");
+
+                    var result = await SaveUpdateDeleteDto(orderSession, _orderSessionRepository);
+
+                    await transaction.CommitAsync();
+
+                    foreach (var item in hasOrders)
+                    {
+                        var rabbit = new RabbitRequestService();
+                        rabbit.SendMessage(new OrderPruductsDto()
+                        {
+                            ProductId = item.ProductId,
+                            Qtd = item.Qtd
+                        }, "productQueue");
+                    }
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
         }
         public async Task<bool> DeleteOrder(int OrderdId)

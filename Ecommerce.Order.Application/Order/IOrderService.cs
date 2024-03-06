@@ -7,6 +7,7 @@ namespace Ecommerce.Order.Application.Order
         Task<OrderDto> GetOrder(int orderId);
         Task<List<OrderDto>> GetAllOrders();
         Task<OrderDto> SaveOrder(int userId, OrderDto orderDto);
+        Task<bool> CloseOrderSession(int orderSessionId, int orderSessionStatusId);
         Task<bool> CloseOrder(int userId);
         Task<bool> DeleteOrder(int orderdId);
     }

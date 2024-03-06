@@ -2,11 +2,11 @@
 using System.Text;
 using System.Text.Json;
 
-namespace Ecommerce.Order.Application.RabbitMq
+namespace Ecommerce.Order.Application.RabbitRequest
 {
-    public class RabbitMessageService : IRabbitMessageService
+    public class RabbitRequestService : IRabbitRequestService
     {
-        public void SendMessage<T>(T message)
+        public void SendMessage<T>(T message, string queue)
         {
             var factory = new ConnectionFactory()
             {
@@ -18,7 +18,7 @@ namespace Ecommerce.Order.Application.RabbitMq
             using var connection = factory.CreateConnection();
             using var channel = connection.CreateModel();
 
-            channel.QueueDeclare(queue: "orderQueue",
+            channel.QueueDeclare(queue: queue, //"orderQueue"
                                  durable: false,
                                  exclusive: false,
                                  autoDelete: false,
@@ -28,7 +28,7 @@ namespace Ecommerce.Order.Application.RabbitMq
             var body = Encoding.UTF8.GetBytes(json);
 
             channel.BasicPublish(exchange: string.Empty,
-                                 routingKey: "orderQueue",
+                                 routingKey: queue, //"orderQueue"
                                  basicProperties: null,
                                  body: body);
 
